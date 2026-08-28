@@ -1,0 +1,18 @@
+<h2>{{ titulo() }}</h2>
+
+<p>{{ descricao() }}</p>
+
+<label for="status">Status: </label>
+<select
+  id="status"
+  [value]="status()"
+  (change)="alterarStatus($any($event.target).value)"
+>
+  <option value="Pendente">Pendente</option>
+  <option value="Em andamento">Em andamento</option>
+  <option value="Concluída">Concluída</option>
+</select>
+
+<button (click)="excluir()">
+  Excluir
+</button>

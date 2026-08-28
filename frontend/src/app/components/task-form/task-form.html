@@ -1,0 +1,65 @@
+<h2>Nova tarefa</h2>
+
+<form #form="ngForm" (ngSubmit)="adicionarTarefa()">
+
+  <label for="titulo">Título: </label>
+  <input
+    type="text"
+    id="titulo"
+    name="titulo"
+    placeholder="Digite o título da tarefa"
+    [(ngModel)]="titulo"
+    required
+    minlength="3"
+    #tituloInput="ngModel"
+  >
+  @if (tituloInput.touched) {
+
+    @if (tituloInput.errors?.['required']) {
+      <p>O título é obrigatório.</p>
+    }
+
+    @if (tituloInput.errors?.['minlength']) {
+      <p>O título deve ter pelo menos 3 caracteres.</p>
+    }
+
+  }
+
+  <br><br>
+
+  <label for="descricao">Descrição: </label>
+  <textarea
+    id="descricao"
+    name="descricao"
+    placeholder="Digite a descrição da tarefa"
+    [(ngModel)]="descricao"
+    required
+    #descricaoInput="ngModel"
+  ></textarea>
+  @if (descricaoInput.invalid && descricaoInput.touched) {
+    <p>A descrição é obrigatória.</p>
+  }
+
+  <br><br>
+
+  <label for="status">Status: </label>
+  <select
+    id="status"
+    name="status"
+    [(ngModel)]="status"
+  >
+    <option>Pendente</option>
+    <option>Em andamento</option>
+    <option>Concluída</option>
+  </select>
+
+  <br><br>
+
+  <button
+    type="submit"
+    [disabled]="form.invalid"
+  >
+    Adicionar tarefa
+  </button>
+
+</form>
