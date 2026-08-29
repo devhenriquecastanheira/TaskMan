@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, effect, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Task, TaskStatus } from '../../models/task.model';
 
@@ -9,11 +9,23 @@ import { Task, TaskStatus } from '../../models/task.model';
   templateUrl: './task-form.html',
 })
 export class TaskForm {
+  constructor() {
+    effect(() => {
+      const tarefa = this.tarefa();
+
+      if (tarefa) {
+        this.titulo = tarefa.titulo;
+        this.descricao = tarefa.descricao;
+        this.status = tarefa.status;
+      }
+    });
+  }
   titulo = '';
   descricao = '';
   status: TaskStatus = 'Pendente';
 
-  tarefaAdicionada = output<Task>();
+  tarefaSalva = output<Task>();
+  tarefa = input<Task | null>(null);
 
   adicionarTarefa() {
     if (!this.titulo.trim() || !this.descricao.trim()) {
@@ -21,13 +33,13 @@ export class TaskForm {
     }
 
     const novaTarefa: Task = {
-      id: 0,
+      id: this.tarefa()?.id ?? 0,
       titulo: this.titulo.trim(),
       descricao: this.descricao.trim(),
       status: this.status
     };
 
-    this.tarefaAdicionada.emit(novaTarefa);
+    this.tarefaSalva.emit(novaTarefa);
 
     this.titulo = '';
     this.descricao = '';

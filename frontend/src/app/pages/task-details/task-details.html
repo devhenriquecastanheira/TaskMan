@@ -1,10 +1,23 @@
 <h2>Detalhes da tarefa</h2>
 
 @if (tarefa(); as tarefaAtual) {
+
   <p>ID: {{ tarefaAtual.id }}</p>
   <p>Título: {{ tarefaAtual.titulo }}</p>
   <p>Descrição: {{ tarefaAtual.descricao }}</p>
   <p>Status: {{ tarefaAtual.status }}</p>
+
+  <hr>
+
+  <h2>Editar tarefa</h2>
+
+  <app-task-form
+    [tarefa]="tarefaAtual"
+    (tarefaSalva)="atualizarTarefa($event)">
+  </app-task-form>
+
 } @else {
+
   <p>Tarefa não encontrada.</p>
+
 }

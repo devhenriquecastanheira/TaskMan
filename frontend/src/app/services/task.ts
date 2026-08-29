@@ -61,4 +61,14 @@ export class TaskService {
   buscarPorId(id: number) {
     return this.tarefas().find(tarefa => tarefa.id === id);
   }
+
+  atualizarTarefa(tarefaAtualizada: Task) {
+    this.tarefas.update(tarefas =>
+      tarefas.map(tarefa =>
+        tarefa.id === tarefaAtualizada.id
+          ? tarefaAtualizada
+          : tarefa
+      )
+    );
+  }
 }
