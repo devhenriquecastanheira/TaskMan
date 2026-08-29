@@ -1,47 +1,13 @@
-<h1>{{ nomeDoProjeto }}</h1>
+<h1>TaskMan</h1>
 
-<p>{{ descricao }}</p>
+<nav>
+  <a routerLink="/tarefas">Tarefas</a>
 
-<p>Tarefas cadastradas: {{ quantidadeDeTarefas() }}</p>
+  <span> | </span>
 
-<p>Tarefas pendentes: {{ quantidadePendentes() }}</p>
-
-<p>Versão: {{ versao }}</p>
-
-<app-task-form
-  (tarefaAdicionada)="adicionarTarefa($event)">
-</app-task-form>
+  <a routerLink="/nova-tarefa">Nova tarefa</a>
+</nav>
 
 <hr>
 
-<label>Filtrar por:</label>
-
-<select
-  id="filtro"
-  [value]="filtro()"
-  (change)="alterarFiltro($any($event.target).value)"
->
-  <option value="Todas">Todas</option>
-  <option value="Pendente">Pendente</option>
-  <option value="Em andamento">Em andamento</option>
-  <option value="Concluída">Concluída</option>
-</select>
-
-@if (tarefas().length > 0) {
-
-  @for (tarefa of tarefasFiltradas(); track tarefa.id) {
-
-    <app-task-card
-      [titulo]="tarefa.titulo"
-      [descricao]="tarefa.descricao"
-      [status]="tarefa.status"
-      (remover)="excluirTarefa(tarefa.id)"
-      (statusAlterado)="alterarStatus(tarefa.id, $event)">
-    </app-task-card>
-
-  }
-} @else {
-
-  <p>Nenhuma tarefa cadastrada.</p>
-
-}
+<router-outlet></router-outlet>

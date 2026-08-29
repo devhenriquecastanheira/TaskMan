@@ -1,0 +1,37 @@
+<p>Tarefas cadastradas: {{ quantidadeDeTarefas() }}</p>
+<p>Tarefas pendentes: {{ quantidadePendentes() }}</p>
+
+<label for="filtro">Filtrar por: </label>
+
+<select
+  id="filtro"
+  [value]="filtro()"
+  (change)="alterarFiltro($any($event.target).value)"
+>
+  <option value="Todas">Todas</option>
+  <option value="Pendente">Pendente</option>
+  <option value="Em andamento">Em andamento</option>
+  <option value="Concluída">Concluída</option>
+</select>
+
+<hr>
+
+@if (tarefasFiltradas().length > 0) {
+
+  @for (tarefa of tarefasFiltradas(); track tarefa.id) {
+
+    <app-task-card
+      [titulo]="tarefa.titulo"
+      [descricao]="tarefa.descricao"
+      [status]="tarefa.status"
+      (remover)="excluirTarefa(tarefa.id)"
+      (statusAlterado)="alterarStatus(tarefa.id, $event)">
+    </app-task-card>
+
+  }
+
+} @else {
+
+  <p>Nenhuma tarefa encontrada.</p>
+
+}
