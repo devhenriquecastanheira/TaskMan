@@ -2,11 +2,12 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { TaskCard } from '../../components/task-card/task-card';
 import { TaskService } from '../../services/task';
 import { TaskStatus } from '../../models/task.model';
+import { RouterLink } from '@angular/router';
 
 type FiltroStatus = 'Todas' | TaskStatus;
 
 @Component({
-  imports: [TaskCard],
+  imports: [TaskCard, RouterLink],
   selector: 'app-task-list',
   styleUrl: './task-list.css',
   templateUrl: './task-list.html',

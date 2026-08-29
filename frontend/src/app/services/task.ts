@@ -57,4 +57,8 @@ export class TaskService {
       )
     );
   }
+
+  buscarPorId(id: number) {
+    return this.tarefas().find(tarefa => tarefa.id === id);
+  }
 }

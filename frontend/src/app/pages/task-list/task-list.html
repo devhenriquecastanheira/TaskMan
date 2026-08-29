@@ -28,6 +28,10 @@
       (statusAlterado)="alterarStatus(tarefa.id, $event)">
     </app-task-card>
 
+    <a [routerLink]="['/tarefas', tarefa.id]">
+      Ver detalhes
+    </a>
+
   }
 
 } @else {
