@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TaskMan.Api.Models;
+using TaskMan.Api.Services;
 
 namespace TaskMan.Api.Controllers;
 
@@ -7,85 +8,66 @@ namespace TaskMan.Api.Controllers;
 [Route("api/tasks")]
 public class TasksController : ControllerBase
 {
-    private static readonly List<TaskItem> Tasks = 
-    [
-        new()
-        {
-            Id = 1,
-            Title = "Estudar Angular",
-            Description = "Aprender Angular 22",
-            Status = "Pendente"
-        },
-        new()
-        {
-            Id = 2,
-            Title = "Estudar C#",
-            Description = "Aprender ASP.NET Core",
-            Status = "Em andamento"
-        }
-    ];
+    private readonly TaskService _taskService;
 
+    public TasksController(TaskService taskService)
+    {
+        _taskService = taskService;
+    }
+    
     [HttpGet]
     public IActionResult GetAll()
     {
-        return Ok(Tasks);
+        return Ok(_taskService.GetAll());
     }
 
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var task = Tasks.FirstOrDefault(t => t.Id == id);
+        var task = _taskService.GetById(id);
 
         if (task is null)
         {
             return NotFound();
         }
-        
+
         return Ok(task);
     }
 
     [HttpPost]
     public IActionResult Create(TaskItem newTask)
     {
-        var maiorId = Tasks.Count > 0
-            ? Tasks.Max(taks => taks.Id)
-            : 0;
-        
-        newTask.Id = maiorId + 1;
-        
-        Tasks.Add(newTask);
-        
-        return CreatedAtAction(nameof(GetById), new { id = newTask.Id }, newTask);
+        var createdTask = _taskService.Create(newTask);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = createdTask.Id },
+            createdTask
+        );
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var task = Tasks.FirstOrDefault(task => task.Id == id);
-        
-        if (task is null)
+        var deleted = _taskService.Delete(id);
+
+        if (!deleted)
         {
             return NotFound();
         }
-        
-        Tasks.Remove(task);
-        
+
         return NoContent();
     }
 
     [HttpPut("{id}")]
     public IActionResult Update(int id, TaskItem updatedTask)
     {
-        var task = Tasks.FirstOrDefault(task => task.Id == id);
+        var updated = _taskService.Update(id, updatedTask);
 
-        if (task is null)
+        if (!updated)
         {
             return NotFound();
         }
-
-        task.Title = updatedTask.Title;
-        task.Description = updatedTask.Description;
-        task.Status = updatedTask.Status;
 
         return NoContent();
     }
