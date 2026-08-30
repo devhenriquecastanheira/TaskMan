@@ -16,15 +16,17 @@ public class TasksController : ControllerBase
     }
     
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        return Ok(_taskService.GetAll());
+        var tasks = await _taskService.GetAllAsync();
+        
+        return Ok(tasks);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var task = _taskService.GetById(id);
+        var task = await _taskService.GetByIdAsync(id);
 
         if (task is null)
         {
@@ -35,9 +37,9 @@ public class TasksController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(TaskItem newTask)
+    public async Task<IActionResult> Create(TaskItem newTask)
     {
-        var createdTask = _taskService.Create(newTask);
+        var createdTask = await _taskService.CreateAsync(newTask);
 
         return CreatedAtAction(
             nameof(GetById),
@@ -47,9 +49,9 @@ public class TasksController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var deleted = _taskService.Delete(id);
+        var deleted = await _taskService.DeleteAsync(id);
 
         if (!deleted)
         {
@@ -60,9 +62,9 @@ public class TasksController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, TaskItem updatedTask)
+    public async Task<IActionResult> Update(int id, TaskItem updatedTask)
     {
-        var updated = _taskService.Update(id, updatedTask);
+        var updated = await _taskService.UpdateAsync(id, updatedTask);
 
         if (!updated)
         {

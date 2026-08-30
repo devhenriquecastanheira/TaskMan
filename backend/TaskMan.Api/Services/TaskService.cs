@@ -1,67 +1,40 @@
-﻿using TaskMan.Api.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TaskMan.Api.Data;
+using TaskMan.Api.Models;
 
 namespace TaskMan.Api.Services;
 
 public class TaskService
 {
-    private readonly List<TaskItem> _tasks =
-    [
-        new()
-        {
-            Id = 1,
-            Title = "Estudar Angular",
-            Description = "Aprender Angular 22",
-            Status = "Pendente"
-        },
-        new()
-        {
-            Id = 2,
-            Title = "Estudar C#",
-            Description = "Aprender ASP.NET Core",
-            Status = "Em andamento"
-        }
-    ];
+    private readonly AppDbContext _context;
 
-    public List<TaskItem> GetAll()
+    public TaskService(AppDbContext context)
     {
-        return _tasks;
+        _context = context;
     }
 
-    public TaskItem? GetById(int id)
+    public async Task<List<TaskItem>> GetAllAsync()
     {
-        return _tasks.FirstOrDefault(task => task.Id == id);
+        return await _context.Tasks.ToListAsync();
     }
 
-    public TaskItem Create(TaskItem newTask)
+    public async Task<TaskItem?> GetByIdAsync(int id)
     {
-        var maiorId = _tasks.Count > 0
-            ? _tasks.Max(task => task.Id)
-            : 0;
+        return await _context.Tasks.FindAsync(id);
+    }
 
-        newTask.Id = maiorId + 1;
+    public async Task<TaskItem> CreateAsync(TaskItem newTask)
+    {
+        _context.Tasks.Add(newTask);
 
-        _tasks.Add(newTask);
+        await _context.SaveChangesAsync();
 
         return newTask;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> UpdateAsync(int id, TaskItem updatedTask)
     {
-        var task = GetById(id);
-
-        if (task is null)
-        {
-            return false;
-        }
-
-        _tasks.Remove(task);
-
-        return true;
-    }
-
-    public bool Update(int id, TaskItem updatedTask)
-    {
-        var task = GetById(id);
+        var task = await GetByIdAsync(id);
 
         if (task is null)
         {
@@ -71,6 +44,24 @@ public class TaskService
         task.Title = updatedTask.Title;
         task.Description = updatedTask.Description;
         task.Status = updatedTask.Status;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var task = await GetByIdAsync(id);
+
+        if (task is null)
+        {
+            return false;
+        }
+
+        _context.Tasks.Remove(task);
+
+        await _context.SaveChangesAsync();
 
         return true;
     }

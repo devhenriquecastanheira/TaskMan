@@ -1,35 +1,75 @@
 @host = http://localhost:5089
 
+### Buscar todas as tarefas
 GET {{host}}/api/tasks
 Accept: application/json
 
 ###
 
-GET {{host}}/api/tasks/2
+### Buscar tarefa por ID
+GET {{host}}/api/tasks/1
 Accept: application/json
 
 ###
 
+### Criar tarefa
 POST {{host}}/api/tasks
 Content-Type: application/json
 
 {
-  "title": "Tarefa para excluir",
-  "description": "Teste do DELETE",
+  "title": "Aprender EF Core",
+  "description": "Salvar tarefas no PostgreSQL",
   "status": "Pendente"
 }
 
 ###
 
-DELETE {{host}}/api/tasks/3
-
-###
-
-PUT {{host}}/api/tasks/999
+### Atualizar tarefa
+PUT {{host}}/api/tasks/1
 Content-Type: application/json
 
 {
-  "title": "Estudar ASP.NET Core",
-  "description": "Aprender endpoints PUT",
-  "status": "Concluída"
+  "title": "Aprender EF Core e PostgreSQL",
+  "description": "Praticar migrations, DbContext e persistência",
+  "status": "Em andamento"
 }
+
+###
+
+### Conferir atualização
+GET {{host}}/api/tasks/1
+Accept: application/json
+
+###
+
+### Excluir tarefa
+DELETE {{host}}/api/tasks/1
+
+###
+
+### Conferir exclusão
+GET {{host}}/api/tasks/1
+Accept: application/json
+
+###
+
+### Testar busca de ID inexistente
+GET {{host}}/api/tasks/999999
+Accept: application/json
+
+###
+
+### Testar atualização de ID inexistente
+PUT {{host}}/api/tasks/999999
+Content-Type: application/json
+
+{
+  "title": "Não deveria atualizar",
+  "description": "Teste de 404",
+  "status": "Pendente"
+}
+
+###
+
+### Testar exclusão de ID inexistente
+DELETE {{host}}/api/tasks/999999
