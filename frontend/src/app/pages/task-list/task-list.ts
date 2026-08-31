@@ -17,6 +17,10 @@ export class TaskList {
 
   readonly tarefas = this.taskService.tarefas;
 
+  constructor() {
+    this.taskService.carregarTarefas();
+  }
+
   quantidadeDeTarefas = computed(() =>
     this.tarefas().length
   );

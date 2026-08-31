@@ -1,28 +1,37 @@
-import { Service, signal } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { Task, TaskStatus } from '../models/task.model';
+import { HttpClient } from '@angular/common/http';
 
+
+interface TaskApi {
+  id: number;
+  title: string;
+  description: string;
+  status: TaskStatus;
+}
 @Service()
 export class TaskService {
-  readonly tarefas = signal<Task[]>([
-    {
-      id: 1,
-      titulo: 'Estudar Angular',
-      descricao: 'Aprender como funcionam componentes',
-      status: 'Pendente'
-    },
-    {
-      id: 2,
-      titulo: 'Estudar C#',
-      descricao: 'Revisar orientação a objetos',
-      status: 'Concluída'
-    },
-    {
-      id: 3,
-      titulo: 'Fazer TaskMan',
-      descricao: 'Continuar desenvolvimento do projeto',
-      status: 'Em andamento'
-    }
-  ]);
+  private readonly http = inject(HttpClient)
+
+  private readonly apiUrl =
+    'http://localhost:5089/api/tasks';
+
+  readonly tarefas = signal<Task[]>([]);
+
+  carregarTarefas() {
+    this.http.get<TaskApi[]>(this.apiUrl)
+      .subscribe(tasksApi => {
+
+        const tasks: Task[] = tasksApi.map(task => ({
+          id: task.id,
+          titulo: task.title,
+          descricao: task.description,
+          status: task.status
+        }));
+
+        this.tarefas.set(tasks);
+      });
+  }
 
   excluirTarefa(id: number) {
     this.tarefas.update(tarefas =>
