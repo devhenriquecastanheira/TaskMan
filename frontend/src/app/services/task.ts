@@ -1,6 +1,7 @@
 import { inject, Service, signal } from '@angular/core';
 import { Task, TaskStatus } from '../models/task.model';
 import { HttpClient } from '@angular/common/http';
+import { map, Observable, tap } from 'rxjs';
 
 
 interface TaskApi {
@@ -39,22 +40,28 @@ export class TaskService {
     );
   }
 
-  adicionarTarefa(tarefa: Task) {
-    const tarefasAtuais = this.tarefas();
-
-    const maiorId = tarefasAtuais.length > 0
-      ? Math.max(...tarefasAtuais.map(tarefa => tarefa.id))
-      : 0;
-
-    const novaTarefa: Task = {
-      ...tarefa,
-      id: maiorId + 1
+  adicionarTarefa(tarefa: Task): Observable<Task> {
+    const taskApi = {
+      title: tarefa.titulo,
+      description: tarefa.descricao,
+      status: tarefa.status
     };
 
-    this.tarefas.update(tarefas => [
-      ...tarefas,
-      novaTarefa
-    ]);
+    return this.http.post<TaskApi>(this.apiUrl, taskApi)
+      .pipe(
+        map(taskCriadaApi => ({
+          id: taskCriadaApi.id,
+          titulo: taskCriadaApi.title,
+          descricao: taskCriadaApi.description,
+          status: taskCriadaApi.status
+        })),
+        tap(tarefaCriada => {
+          this.tarefas.update(tarefas => [
+            ...tarefas,
+            tarefaCriada
+          ]);
+        })
+      );
   }
 
   alterarStatus(id: number, status: TaskStatus) {

@@ -15,8 +15,15 @@ export class TaskCreate {
   private readonly router = inject(Router);
 
   adicionarTarefa(tarefa: Task) {
-    this.taskService.adicionarTarefa(tarefa);
+    this.taskService.adicionarTarefa(tarefa)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/tarefas']);
+        },
 
-    this.router.navigate(['/tarefas']);
+        error: erro => {
+          console.error('Erro ao criar tarefa:', erro);
+        }
+      });
   }
 }
