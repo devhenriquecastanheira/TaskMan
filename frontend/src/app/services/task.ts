@@ -1,14 +1,8 @@
 import {inject, Service, signal} from '@angular/core';
 import {Task, TaskStatus} from '../models/task.model';
 import {HttpClient} from '@angular/common/http';
+import {TaskApi} from '../models/task-api.model';
 
-
-interface TaskApi {
-  id: number;
-  title: string;
-  description: string;
-  status: TaskStatus;
-}
 @Service()
 export class TaskService {
   private readonly http = inject(HttpClient)
@@ -63,7 +57,9 @@ export class TaskService {
   }
 
   buscarPorId(id: number) {
-    return this.tarefas().find(tarefa => tarefa.id === id);
+    return this.http.get<TaskApi>(
+      `${this.apiUrl}/${id}`
+    )
   }
 
   atualizarTarefa(tarefaAtualizada: Task) {
