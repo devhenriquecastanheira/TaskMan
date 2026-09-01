@@ -67,12 +67,15 @@ export class TaskService {
   }
 
   atualizarTarefa(tarefaAtualizada: Task) {
-    this.tarefas.update(tarefas =>
-      tarefas.map(tarefa =>
-        tarefa.id === tarefaAtualizada.id
-          ? tarefaAtualizada
-          : tarefa
-      )
+    const taskApi = {
+      title: tarefaAtualizada.titulo,
+      description: tarefaAtualizada.descricao,
+      status: tarefaAtualizada.status
+    };
+
+    return this.http.put<void>(
+      `${this.apiUrl}/${tarefaAtualizada.id}`,
+      taskApi
     );
   }
 }

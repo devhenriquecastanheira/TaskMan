@@ -22,8 +22,10 @@ export class TaskDetails {
   );
 
   atualizarTarefa(tarefa: Task) {
-    this.taskService.atualizarTarefa(tarefa);
-
-    this.router.navigate(['/tarefas']);
+    this.taskService
+      .atualizarTarefa(tarefa)
+      .subscribe(() => {
+        this.router.navigate(['/tarefas']);
+      })
   }
 }
