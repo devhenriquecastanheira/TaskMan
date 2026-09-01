@@ -48,7 +48,11 @@ export class TaskList {
   }
 
   excluirTarefa(id: number) {
-    this.taskService.excluirTarefa(id);
+    this.taskService
+      .excluirTarefa(id)
+      .subscribe(() => {
+        this.taskService.carregarTarefas();
+      })
   }
 
   alterarStatus(id: number, status: TaskStatus) {

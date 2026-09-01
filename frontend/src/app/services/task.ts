@@ -34,8 +34,8 @@ export class TaskService {
   }
 
   excluirTarefa(id: number) {
-    this.tarefas.update(tarefas =>
-      tarefas.filter(tarefa => tarefa.id !== id)
+    return this.http.delete<void>(
+      `${this.apiUrl}/${id}`
     );
   }
 
