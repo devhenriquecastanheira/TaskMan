@@ -25,7 +25,7 @@
       [descricao]="tarefa.descricao"
       [status]="tarefa.status"
       (remover)="excluirTarefa(tarefa.id)"
-      (statusAlterado)="alterarStatus(tarefa.id, $event)">
+      (statusAlterado)="alterarStatus(tarefa, $event)">
     </app-task-card>
 
     <a [routerLink]="['/tarefas', tarefa.id]">

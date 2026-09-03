@@ -1,7 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { TaskCard } from '../../components/task-card/task-card';
 import { TaskService } from '../../services/task';
-import { TaskStatus } from '../../models/task.model';
+import {Task, TaskStatus} from '../../models/task.model';
 import { RouterLink } from '@angular/router';
 
 type FiltroStatus = 'Todas' | TaskStatus;
@@ -55,7 +55,16 @@ export class TaskList {
       })
   }
 
-  alterarStatus(id: number, status: TaskStatus) {
-    this.taskService.alterarStatus(id, status);
+  alterarStatus(tarefa: Task, status: TaskStatus) {
+    const tarefaAtualizada: Task = {
+      ...tarefa,
+      status
+    };
+
+    this.taskService
+      .atualizarTarefa(tarefaAtualizada)
+      .subscribe(() => {
+        this.taskService.carregarTarefas();
+      });
   }
 }
